@@ -1,6 +1,10 @@
+What is it?
+====================================================================================================
 Graffiti is a lightweight web framework for Groovy inspired by Sinatra
 
+
 Groovy Start:
+====================================================================================================
 
 import graffiti.*
 
@@ -32,8 +36,25 @@ Graffiti.serve '*.css'
 // required to process annotations
 Graffiti.serve this
 
+
 Running It:
+====================================================================================================
 
 It's super easy!
 
 groovy $YOUR_FILE_NAME.groovy
+
+
+Implicit Variables:
+====================================================================================================
+
+application - ServletContext
+parameters - map of parameters
+request - HttpServletRequest
+response - HttpServletResponse
+session - HttpSession
+
+
+That's all for now, not sure if or when I will add more features.  Feel free to fork it and give it a go!
+
+Cheers!
