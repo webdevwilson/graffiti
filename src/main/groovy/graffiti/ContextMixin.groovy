@@ -3,22 +3,22 @@ package graffiti
 public class ContextMixin {
 
     def getApplication() {
-        return AppContext.application
+        WebContextHolder.instance.application
     }
 
     def getRequest() {
-        return AppContext.getRequest()
+        WebContextHolder.instance.request
     }
 
     def getResponse() {
-        return AppContext.getResponse()
+        WebContextHolder.instance.response
     }
 
     def getSession() {
-        return new Session( AppContext.getRequest().getSession(true) )
+        new Session( WebContextHolder.instance.request.session )
     }
 
-    def getParameters() {
-        return AppContext.getParameters()
+    def getParams() {
+        WebContextHolder.instance.params
     }
 }

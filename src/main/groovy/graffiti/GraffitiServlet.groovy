@@ -16,12 +16,12 @@ class GraffitiServlet extends HttpServlet {
 
     private void execute(request, response, block) {
         if( block ) {
-            AppContext.setup( request, response )
+            WebContextHolder.instance.setup( request, response )
             def output = block()
             if( output instanceof String || output instanceof GString ) {
                 response.writer.write( output.toString() )
             }
-            AppContext.cleanup()
+            WebContextHolder.instance.cleanup()
         } else {
             response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED)
         }
