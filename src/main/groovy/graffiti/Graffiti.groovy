@@ -12,7 +12,7 @@ public class Graffiti {
 
     static config = [ 'port': '8080',
                       'root': 'public',
-                      'resources': [:],
+                      'datasources': [:],
                       'classpath': classpath,
                       'servlets': [],
                       'mappings': [],
@@ -33,17 +33,17 @@ public class Graffiti {
                     Graffiti.post( post.value(), { method.invoke(obj) } )
                 }
 
-                def resource = method.cachedMethod.getAnnotation(Resource)
-                if( resource ) {
-                    Graffiti.addResource( resource.value(), method.invoke(obj) )
+                def dataSource = method.cachedMethod.getAnnotation(DataSource)
+                if( dataSource ) {
+                    config.datasources[dataSource.value()] = method.invoke(obj)
                 }
             }
         }
 
     }
 
-    public static serve(String path, servlet = org.mortbay.jetty.servlet.DefaultServlet) {
-        config.mappings << ['path': path, 'servlet': servlet]
+    public static serve(String path, servlet = org.mortbay.jetty.servlet.DefaultServlet, configBlock = null) {
+        config.mappings << ['path': path, 'servlet': servlet, 'configBlock': configBlock]
     }
     
     public static root(String path) {
@@ -56,11 +56,6 @@ public class Graffiti {
 
     public static post(path, block) {
         register('post', path, block)
-    }
-
-    public static addResource(name, value) {
-        println "adding resource ${name}: ${value}"
-        config.resources[name] = value
     }
 
     public static start() {

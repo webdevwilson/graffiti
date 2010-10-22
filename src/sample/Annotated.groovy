@@ -5,7 +5,7 @@ import graffiti.*
     @Grab('com.goodercode:graffiti:1.0-SNAPSHOT'),
     @Grab('mysql:mysql-connector-java:5.1.13')
 ])
-@Resource('jdbc/database')
+@DataSource('mydb')
 def getDataSource() {
     datasource = new com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource()
     datasource.user="user"
@@ -36,7 +36,9 @@ def save() {
 
 Graffiti.classpath << 'resin.jar'
 
-Graffiti.serve '*.php', 'com.caucho.quercus.servlet.QuercusServlet'
+Graffiti.serve('*.php', 'com.caucho.quercus.servlet.QuercusServlet') {
+    initParameter('database', 'jdbc/mydb')
+}
 
 Graffiti.root 'public'
 Graffiti.serve '*.css'

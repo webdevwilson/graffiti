@@ -1,5 +1,7 @@
 package graffiti
 
+import javax.naming.InitialContext
+
 class Server {
 
     def jetty
@@ -32,23 +34,12 @@ class Server {
         setRoot(config.root)
 
         config.mappings.each { map it }
-
-        config.resources.each { name, value ->
-            resource = new org.mortbay.jetty.plus.naming.Resource(name, value)
+        println config.datasources
+        config.datasources.each { name, value ->
+            def initialContext = new InitialContext()
+            println "binding datasource java:comp/env/jdbc/${name}"
+            initialContext.bind("java:comp/env/jdbc/${name}", value)
         }
-
-//        <New id="DSTest" class="org.mortbay.jetty.plus.naming.Resource">
-//    <Arg></Arg>
-//    <Arg>jdbc/DSTest</Arg>
-//    <Arg>
-//     <New class="org.apache.commons.dbcp.BasicDataSource">
-//                 <Set name="driverClassName">org.some.Driver</Set>
-//                 <Set name="url">jdbc.url</Set>
-//                 <Set name="username">jdbc.user</Set>
-//                 <Set name="password">jdbc.pass</Set>
-//     </New>
-//    </Arg>
-//   </New>
     }
 
     void map(mapping) {
@@ -73,6 +64,11 @@ class Server {
             def servlet = mapping.servlet
             if( servlet instanceof javax.servlet.Servlet ) {
                 servlet = new org.mortbay.jetty.servlet.ServletHolder(servlet)
+                println mapping
+                if( mapping.configBlock ) {
+                    mapping.configBlock.delegate = servlet
+                    mapping.configBlock()
+                }
             }
 
             println 'adding servlet ' + servlet + ' to ' + path
@@ -87,7 +83,6 @@ class Server {
     }
 
     void start() {
-        started = true
         jetty.start()
     }
 
