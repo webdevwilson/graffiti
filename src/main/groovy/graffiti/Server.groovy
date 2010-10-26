@@ -34,12 +34,15 @@ class Server {
         setRoot(config.root)
 
         config.mappings.each { map it }
-        println config.datasources
-        config.datasources.each { name, value ->
-            def initialContext = new InitialContext()
-            println "binding datasource java:comp/env/jdbc/${name}"
-            initialContext.bind("java:comp/env/jdbc/${name}", value)
-        }
+
+        webAppContext.configurations.each { println it.class }
+
+//        config.datasources.each { name, value ->
+////            register the datasource
+//            def entry = new org.mortbay.jetty.plus.naming.Resource("jdbc/${name}", (javax.sql.DataSource)value)
+//
+//
+//        }
     }
 
     void map(mapping) {

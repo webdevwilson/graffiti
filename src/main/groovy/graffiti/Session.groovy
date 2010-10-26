@@ -10,11 +10,11 @@ class Session {
     }
 
     def getProperty(String name) {
-        session.getAttribute(name)
+        getAttribute(name)
     }
 
     void setProperty(String name, value) {
-        session.setAttribute(name, value)
+        setAttribute(name, value)
     }
 
 
