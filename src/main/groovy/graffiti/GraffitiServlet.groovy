@@ -4,7 +4,7 @@ import javax.servlet.http.*
 
 class GraffitiServlet extends HttpServlet {
 
-    def get, post
+    def get, post, put, delete
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
         execute(request, response, get)
@@ -12,6 +12,14 @@ class GraffitiServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
         execute(request, response, post)
+    }
+
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) {
+        execute(request, response, put)
+    }
+
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
+        execute(request, response, delete)
     }
 
     private void execute(request, response, block) {

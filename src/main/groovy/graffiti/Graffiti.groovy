@@ -33,6 +33,16 @@ public class Graffiti {
                     Graffiti.post( post.value(), { method.invoke(obj) } )
                 }
 
+                def put = method.cachedMethod.getAnnotation(Put)
+                if( put ) {
+                    Graffiti.put( put.value(), { method.invoke(obj) } )
+                }
+
+                def delete = method.cachedMethod.getAnnotation(Delete)
+                if( delete ) {
+                    Graffiti.delete( delete.value(), { method.invoke(obj) } )
+                }
+
                 def dataSource = method.cachedMethod.getAnnotation(DataSource)
                 if( dataSource ) {
                     config.datasources[dataSource.value()] = method.invoke(obj)
@@ -56,6 +66,14 @@ public class Graffiti {
 
     public static post(path, block) {
         register('post', path, block)
+    }
+
+    public static put(path, block) {
+        register('put', path, block)
+    }
+
+    public static delete(path, block) {
+        register('delete', path, block)
     }
 
     public static start() {
