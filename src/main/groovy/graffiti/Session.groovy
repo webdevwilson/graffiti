@@ -1,9 +1,11 @@
 package graffiti
 
+import javax.servlet.http.HttpSession
+
 class Session {
 
     @Delegate
-    def session
+    def HttpSession session
 
     Session(session) {
         this.session = session
