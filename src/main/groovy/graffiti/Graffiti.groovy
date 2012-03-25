@@ -1,5 +1,7 @@
 package graffiti
 
+import org.eclipse.jetty.servlet.DefaultServlet
+
 public class Graffiti {
 
     static server
@@ -52,7 +54,7 @@ public class Graffiti {
 
     }
 
-    public static serve(String path, servlet = org.mortbay.jetty.servlet.DefaultServlet, configBlock = null) {
+    public static serve(String path, servlet = DefaultServlet, configBlock = null) {
         config.mappings << ['path': path, 'servlet': servlet, 'configBlock': configBlock]
     }
     
