@@ -4,7 +4,7 @@
     <groupId>com.goodercode</groupId>
     <artifactId>graffiti</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-rest-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <name>graffiti</name>
     <url>http://maven.apache.org</url>
     <properties>

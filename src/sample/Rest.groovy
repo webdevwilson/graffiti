@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-@Grab('com.goodercode:graffiti:1.0-rest-SNAPSHOT')
+@Grab('com.goodercode:graffiti:1.0-SNAPSHOT')
 @Grab('commons-httpclient:commons-httpclient:3.1')
 
 import graffiti.*
