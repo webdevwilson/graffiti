@@ -51,11 +51,11 @@ It's super easy!
 Implicit Variables
 ===================
 
-`application` — ServletContext
-`parameters` — map of parameters
-`request` — HttpServletRequest
-`response` — HttpServletResponse
-`session` — HttpSession
+* `application` — ServletContext
+* `parameters` — map of parameters
+* `request` — HttpServletRequest
+* `response` — HttpServletResponse
+* `session` — HttpSession
 
 
 That's all for now, not sure if or when I will add more features. Feel free to fork it and give it a go!
