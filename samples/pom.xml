@@ -7,8 +7,8 @@
         <artifactId>graffiti-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>graffiti-sample</artifactId>
-    <name>graffiti-sample</name>
+    <artifactId>graffiti-samples</artifactId>
+    <name>graffiti-samples</name>
     <build>
         <plugins>
             <plugin>

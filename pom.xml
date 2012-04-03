@@ -10,7 +10,7 @@
     <url>http://maven.apache.org</url>
     <modules>
         <module>core</module>
-        <module>sample</module>
+        <module>samples</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
