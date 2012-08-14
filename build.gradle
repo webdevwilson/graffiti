@@ -1,0 +1,51 @@
+allprojects {
+    apply plugin : 'groovy'
+    apply plugin : 'idea'
+
+    group = 'com.goodercode'
+    version = '1.0-SNAPSHOT'
+
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+
+    idea.project.ipr {
+        withXml { provider ->
+            provider.node.component.find {
+                it.@name == 'VcsDirectoryMappings'
+            }.mappings[0].@vcs = 'Git'
+        }
+    }
+}
+
+def jettyVersion = '8.1.2.v20120308'
+
+subprojects {
+    repositories {
+        mavenCentral ()
+    }
+
+    dependencies {
+        groovy 'org.codehaus.groovy:groovy-all:1.8.6'
+    }
+}
+
+project (':core') {
+    dependencies {
+        testCompile ('org.spockframework:spock-core:0.6-groovy-1.8') {
+            exclude module : 'groovy-all'
+        }
+        groovy ("org.eclipse.jetty:jetty-server:${jettyVersion}") {
+            exclude module : 'javax.servlet'
+        }
+        groovy 'javax.servlet:javax.servlet-api:3.0.1'
+        groovy "org.eclipse.jetty:jetty-webapp:${jettyVersion}"
+        groovy 'commons-httpclient:commons-httpclient:3.1'
+        testCompile 'com.google.guava:guava:11.0.2'
+    }
+}
+
+project (':samples') {
+    dependencies {
+        compile project(':core')
+    }
+}
