@@ -9,6 +9,7 @@ allprojects {
     targetCompatibility = 1.6
 }
 
+def jetty = 'org.eclipse.jetty'
 def jettyVersion = '8.1.2.v20120308'
 
 subprojects {
@@ -22,17 +23,27 @@ subprojects {
 }
 
 project (':core') {
+
+    configurations {
+        jettyArtifacts
+    }
+
     dependencies {
         testCompile ('org.spockframework:spock-core:0.6-groovy-1.8') {
             exclude module : 'groovy-all'
         }
-        groovy ("org.eclipse.jetty:jetty-server:${jettyVersion}") {
+        jettyArtifacts ("${jetty}:jetty-server:${jettyVersion}") {
+            exclude module : 'javax.servlet'
+            exclude module : 'jetty-util'
+        }
+        jettyArtifacts ("${jetty}:jetty-webapp:${jettyVersion}") {
             exclude module : 'javax.servlet'
         }
-        groovy 'javax.servlet:javax.servlet-api:3.0.1'
-        groovy "org.eclipse.jetty:jetty-webapp:${jettyVersion}"
-        groovy 'commons-httpclient:commons-httpclient:3.1'
+        groovy files (project.configurations.jettyArtifacts.asPath.split(':'))
+        groovy  'javax.servlet:javax.servlet-api:3.0.1'
+        groovy  'commons-httpclient:commons-httpclient:3.1'
         testCompile 'com.google.guava:guava:11.0.2'
+        testCompile files (project.configurations.jettyArtifacts.asPath.split(':'))
     }
 }
 
