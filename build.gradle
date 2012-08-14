@@ -7,14 +7,6 @@ allprojects {
 
     sourceCompatibility = 1.6
     targetCompatibility = 1.6
-
-    idea.project.ipr {
-        withXml { provider ->
-            provider.node.component.find {
-                it.@name == 'VcsDirectoryMappings'
-            }.mappings[0].@vcs = 'Git'
-        }
-    }
 }
 
 def jettyVersion = '8.1.2.v20120308'
@@ -47,5 +39,15 @@ project (':core') {
 project (':samples') {
     dependencies {
         compile project(':core')
+    }
+}
+
+idea.project.ipr {
+    withXml { provider ->
+        def map = provider.node.component.find {
+            it.@name == 'VcsDirectoryMappings'
+        }.mapping
+        map.@vcs = 'Git'
+        map.@directory = project.properties.projectDir
     }
 }
