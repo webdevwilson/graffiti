@@ -11,6 +11,7 @@ allprojects {
 
 def jetty = 'org.eclipse.jetty'
 def jettyVersion = '8.1.2.v20120308'
+def orbit = [groupId : "${jetty}.orbit", artifactId : 'javax.servlet']
 
 subprojects {
     repositories {
@@ -33,17 +34,33 @@ project (':core') {
             exclude module : 'groovy-all'
         }
         jettyArtifacts ("${jetty}:jetty-server:${jettyVersion}") {
-            exclude module : 'javax.servlet'
+            exclude module : orbit.artifactId
             exclude module : 'jetty-util'
         }
         jettyArtifacts ("${jetty}:jetty-webapp:${jettyVersion}") {
-            exclude module : 'javax.servlet'
+            exclude module : orbit.artifactId
         }
         groovy files (project.configurations.jettyArtifacts.asPath.split(':'))
         groovy  'javax.servlet:javax.servlet-api:3.0.1'
         groovy  'commons-httpclient:commons-httpclient:3.1'
         testCompile 'com.google.guava:guava:11.0.2'
         testCompile files (project.configurations.jettyArtifacts.asPath.split(':'))
+    }
+
+    def jettyArtifactDependenciesNodes = {
+        configurations.jettyArtifacts.dependencies.collect {
+            def node = new Node(null, 'dependency')
+            node.appendNode('groupId', it.group)
+            node.appendNode('artifactId', it.name)
+            node.appendNode('version', it.version)
+
+            def exclusions = node.appendNode('exclusions')
+            def exclude = exclusions.appendNode('exclusion')
+            orbit.each {
+                exclude.appendNode(it.key, it.value)
+            }
+            return node
+        }
     }
 }
 

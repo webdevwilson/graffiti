@@ -1,1 +1,70 @@
+apply plugin : 'signing'
+apply plugin : 'maven'
+
 archivesBaseName = 'graffiti-core'
+
+artifacts {
+    archives jar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        beforeDeployment { MavenDeployment deployment ->
+            signPom(deployment)
+        }
+        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            authentication(userName: sonatypeUser, password: sonatypePassword)
+        }
+        pom.project {
+            name 'graffiti'
+            packaging 'jar'
+            description 'Graffiti is a lightweight web framework for Groovy inspired by Sinatra'
+            url projectUrl
+
+            scm {
+                url scmUrl
+                connection scmUrl
+                developerConnection scmUrl
+            }
+
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/license/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+
+            developers {
+                developer {
+                    id 'webdevwilson'
+                    name 'Kerry Wilson'
+                }
+            }
+        }
+
+        pom.withXml { XmlProvider xmlProvider ->
+            def xml = xmlProvider.asString()
+            def pomXml = new XmlParser().parse(new ByteArrayInputStream(xml.toString().bytes))
+
+            pomXml.version[0] + {packaging ('jar')}
+            Node dependencies = pomXml.get('dependencies')
+
+            jettyArtifactDependenciesNodes().each {
+                dependencies.append(it)
+            }
+
+            def writer = new StringWriter()
+            def printer = new XmlNodePrinter(new PrintWriter(writer))
+
+            printer.preserveWhitespace = true
+            printer.print(pomXml)
+            xml.setLength(0)
+            xml.append(writer.toString())
+        }
+    }
+}
