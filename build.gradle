@@ -1,0 +1,85 @@
+allprojects {
+    apply plugin : 'groovy'
+    apply plugin : 'idea'
+
+    group = 'com.goodercode'
+    version = '1.0-SNAPSHOT'
+
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+}
+
+def jetty = 'org.eclipse.jetty'
+def jettyVersion = '8.1.2.v20120308'
+def orbit = [groupId : "${jetty}.orbit", artifactId : 'javax.servlet']
+
+subprojects {
+    repositories {
+        mavenCentral ()
+    }
+
+    dependencies {
+        groovy 'org.codehaus.groovy:groovy-all:1.8.6'
+    }
+}
+
+project (':core') {
+
+    configurations {
+        jettyArtifacts
+    }
+
+    dependencies {
+        testCompile ('org.spockframework:spock-core:0.6-groovy-1.8') {
+            exclude module : 'groovy-all'
+        }
+        jettyArtifacts ("${jetty}:jetty-server:${jettyVersion}") {
+            exclude module : orbit.artifactId
+            exclude module : 'jetty-util'
+        }
+        jettyArtifacts ("${jetty}:jetty-webapp:${jettyVersion}") {
+            exclude module : orbit.artifactId
+        }
+        groovy files (project.configurations.jettyArtifacts.asPath.split(':'))
+        groovy  'javax.servlet:javax.servlet-api:3.0.1'
+        groovy  'commons-httpclient:commons-httpclient:3.1'
+        testCompile 'com.google.guava:guava:11.0.2'
+        testCompile files (project.configurations.jettyArtifacts.asPath.split(':'))
+    }
+
+    def jettyArtifactDependenciesNodes = {
+        configurations.jettyArtifacts.dependencies.collect {
+            def node = new Node(null, 'dependency')
+            node.appendNode('groupId', it.group)
+            node.appendNode('artifactId', it.name)
+            node.appendNode('version', it.version)
+
+            def exclusions = node.appendNode('exclusions')
+            def exclude = exclusions.appendNode('exclusion')
+            orbit.each {
+                exclude.appendNode(it.key, it.value)
+            }
+            return node
+        }
+    }
+}
+
+project (':samples') {
+    dependencies {
+        compile project(':core')
+    }
+}
+
+idea.project.ipr {
+    withXml { provider ->
+        def map = provider.node.component.find {
+            it.@name == 'VcsDirectoryMappings'
+        }.mapping
+        map.@vcs = 'Git'
+        map.@directory = project.properties.projectDir
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = 1.0
+}
