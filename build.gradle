@@ -79,3 +79,7 @@ idea.project.ipr {
         map.@directory = project.properties.projectDir
     }
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = 1.0
+}
