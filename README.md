@@ -18,7 +18,7 @@ Groovy Start
     // /hello/name?name=You
     @Get('/hello/name')
     def helloWhomever() {
-        "Hello ${parameters[name]}"
+        "Hello '${params['name']}'"  
     }
 
     // a sample post
